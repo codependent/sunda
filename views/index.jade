@@ -2,12 +2,15 @@ extends layout
 
 block content
 	div(id="todo-list", class="row")
+	
 		div(class="leftLayer col-sm-4")
 			div(class="container")
 				h1=title
 				div(id="routeList")
-					div(ng-repeat="call in calls") 
-						a(href="#" ng-click="select(call)") {{call.method}} - {{call.path}}
+					div(class="row", ng-repeat="call in calls") 
+						div(class="col-sm-12")
+							a(href="#" ng-click="select(call)") {{call.method}} - {{call.path}}
+							
 		div(class="rightLayer col-sm-8") 
 			input(type="text" ng-model="callForm.path") 
 			select(ng-model="callForm.method")
@@ -19,4 +22,5 @@ block content
 				button(class="btn btn-success", type="button", ng-show="callForm.id == null", ng-click="save()") Save
 				button(class="btn btn-success", type="button", ng-show="callForm.id != null", ng-click="update()") Update 
 				button(class="btn btn-warning", type="button", ng-show="callForm.id != null", ng-click="cancelEdit()") Cancel 
+				button(class="btn btn-danger" , type="button", ng-show="callForm.id != null", ng-click="remove()") Delete
 			

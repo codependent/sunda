@@ -24,7 +24,16 @@ angular.module('sundaControllers', [])
 			Routes.update($scope.callForm)
 				.success(function(data) {
 					console.log($scope.calls);
-					$scope.calls.push(data);
+					//TODO
+			});
+			$scope.callForm = null;
+		}
+		
+		$scope.remove = function(){
+			Routes.delete($scope.callForm)
+				.success(function(data) {
+					console.log(data);
+					//TODO
 			});
 			$scope.callForm = null;
 		}

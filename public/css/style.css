@@ -1,3 +1,3 @@
-.leftLayer{
-	background-color: rgb(226, 226, 226);
-}
+.leftLayer{background-color: #EEE;}
+#routeList > div.row {padding: 10px;}
+#routeList > div.row:hover {background-color: #DDD;cursor:pointer;text-decoration:none;}

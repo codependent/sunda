@@ -3,9 +3,11 @@ var router = express.Router();
 
 module.exports = function(rootRouter){
 	router.route('/')
+	
 		.get(function(req, res, next) {
-			res.json([{ id: 1, method: "GET",  path: "/action/cosa",  params : null,  groupId : null },
-			          { id: 2, method: "POST", path: "taskmgr/action/tareas",  params : null,  groupId : "taskmgr" }]);
+			//TODO hasta que los obtengamos de BBDD
+			res.json([]);
+			
 		}).post(function(req, res, next){
 			if(req.body.method == 'GET'){
 				rootRouter.route(req.body.path)
@@ -28,12 +30,30 @@ module.exports = function(rootRouter){
 					res.send('DELETE called!!!');
 				});
 			}
-			//XXX hasta que generemos un id por BBDD
+			//TODO hasta que generemos un id por BBDD
 			req.body.id = Math.random();
-			return res.json(req.body)
+			return res.json(req.body);
+			
 		}).put(function(req, res, next){
-				console.log(rootRouter);
+			console.log(req.body);
+			console.log(rootRouter);
+			
+		});
+	
+	router.route('/:id')
+	
+		.delete(function(req, res, next){
+			//TODO Obtener el path del id
+			var path = "/mobmgr/action/devices";
+			var removed = false;
+			for(var i=0; !removed && i< rootRouter.stack.length; i++){
+				if(rootRouter.stack[i].regexp.test(path)){
+					rootRouter.stack.splice(i, 1);
+					console.log(rootRouter.stack);
+					removed=true;
+				}
 			}
-		);
+		});
+	
 	return router;
 }
