@@ -1,1 +1,1 @@
-angular.module('sundaApp', ['routesController', 'routesService']);
+angular.module('sundaApp', ['sundaControllers', 'sundaServices']);

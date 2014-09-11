@@ -1,14 +1,17 @@
-angular.module('todoService', [])
-
-	// super simple service
-	// each function returns a promise object 
-	.factory('Todos', ['$http',function($http) {
+angular.module('sundaServices', [])
+	.factory('Routes', ['$http',function($http) {
 		return {
 			get : function() {
-				return $http.get('/api/todos');
+				return $http.get('/user-routes');
 			},
-			create : function(todoData) {
-				return $http.post('/api/todos', todoData);
+			getByGroup : function(group) {
+				return $http.get('/user-routes/'+group);
+			},
+			create : function(callData) {
+				return $http.post('/user-routes', callData);
+			},
+			update : function(callData) {
+				return $http.put('/user-routes', callData);
 			},
 			delete : function(id) {
 				return $http.delete('/api/todos/' + id);
