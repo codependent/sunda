@@ -13,8 +13,8 @@ angular.module('sundaServices', [])
 			update : function(callData) {
 				return $http.put('/user-routes', callData);
 			},
-			delete : function(callData) {
-				return $http.delete('/user-routes/'+callData.id);
+			delete : function(id) {
+				return $http.delete('/user-routes/'+id)
 			}
 		}
 	}]);

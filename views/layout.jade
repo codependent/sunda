@@ -2,12 +2,15 @@ doctype html
 html(ng-app="sundaApp")
 	head
 		title= title
+		script(src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js")
 		script(src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.16/angular.min.js")
+		script(src="bootstrap/js/bootstrap.min.js")
 		script(src="js/controllers/routes.js")
 		script(src="js/services/routes.js")
 		script(src="js/core.js")
+		link(rel="stylesheet", href="bootstrap/css/bootstrap.min.css")
+		link(rel="stylesheet", href="font-awesome/css/font-awesome.min.css")
 		link(rel="stylesheet", href="css/style.css")
-		link(rel="stylesheet", href="css/bootstrap.min.css")
-		link(rel="stylesheet", href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css")
+		
 	body(ng-controller="routesController")
 		block content

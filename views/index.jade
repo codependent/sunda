@@ -4,23 +4,57 @@ block content
 	div(id="todo-list", class="row")
 	
 		div(class="leftLayer col-sm-4")
-			div(class="container")
+			div
 				h1=title
 				div(id="routeList")
-					div(class="row", ng-repeat="call in calls") 
-						div(class="col-sm-12")
-							a(href="#" ng-click="select(call)") {{call.method}} - {{call.path}}
+					div(class="row routeRow", ng-repeat="call in calls", ng-mouseenter="showDeleteCall = true", ng-mouseleave="showDeleteCall = false") 
+						div(class="call-actions" ng-show="showDeleteCall")
+							a(class="call-delete", ng-click="remove(call.id)")
+								img(src="img/ico/delete.png")
+						div(class="col-sm-12", ng-click="select(call)")
+							a(href="#") <span class="httpMethod {{call.method}}">{{call.method}}</span> {{call.path}}
 							
 		div(class="rightLayer col-sm-8") 
-			input(type="text" ng-model="callForm.path") 
-			select(ng-model="callForm.method")
-				option(value="GET") GET
-				option(value="POST") POST
-				option(value="PUT") PUT
-				option(value="DELETE") DELETE
-			b
-				button(class="btn btn-success", type="button", ng-show="callForm.id == null", ng-click="save()") Save
-				button(class="btn btn-success", type="button", ng-show="callForm.id != null", ng-click="update()") Update 
-				button(class="btn btn-warning", type="button", ng-show="callForm.id != null", ng-click="cancelEdit()") Cancel 
-				button(class="btn btn-danger" , type="button", ng-show="callForm.id != null", ng-click="remove()") Delete
-			
+			form(class="form-inline")
+				div(class="row")
+					div(class="col-sm-12")
+						div(class="form-group")
+							div(class="input-group")
+								span(class="input-group-addon")
+									i( class="fa fa-link")
+								input(required="required",title="url path",class="form-control",type="text",placeholder="url path", ng-model="callForm.path", autofocus)
+						div(class="form-group")
+							select(ng-model="callForm.method" class="form-control")
+								option(value="GET") GET
+								option(value="POST") POST
+								option(value="PUT") PUT
+								option(value="DELETE") DELETE
+						div(class="btn-group")
+							a(class="btn btn-primary" href="#")
+								i(class="fa fa-user fa-fw") 
+								| User
+							a(class="btn btn-primary dropdown-toggle" data-toggle="dropdown" href="#")
+								span(class="fa fa-caret-down")
+							ul(class="dropdown-menu")
+								li
+									a(href="#")
+										i(class="fa fa-pencil fa-fw") 
+										| Edit
+								li
+									a( href="#")
+										i(class="fa fa-trash-o fa-fw") 
+										| Delete
+								li
+									a(href="#")
+										i(class="fa fa-ban fa-fw") 
+										|Ban
+								li(class="divider")
+								li
+									a(href="#")
+										i(class="i") 
+										| Make admin
+				div(class="row")
+					div(class="col-sm-12 button-group")
+						button(class="btn btn-success", type="button", ng-show="callForm.id == null", ng-click="save()") Save
+						button(class="btn btn-success", type="button", ng-show="callForm.id != null", ng-click="update()") Update 
+						button(class="btn btn-warning", type="button", ng-show="callForm.id != null", ng-click="cancelEdit()") Cancel 			

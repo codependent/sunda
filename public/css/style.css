@@ -1,3 +1,24 @@
 .leftLayer{background-color: #EEE;}
-#routeList > div.row {padding: 10px;}
-#routeList > div.row:hover {background-color: #DDD;cursor:pointer;text-decoration:none;}
+.leftLayer > div{margin-left:15px;}
+#routeList > div.routeRow > div {padding: 8px 10px;}
+#routeList > div.routeRow:hover {background-color: #DDD;cursor:pointer;text-decoration:none;border-radius: 0px 10px 10px 0px;}
+#routeList > div.routeRow > div:hover > a {text-decoration:none;}
+#routeList a {color: #444!important;}
+.button-group{margin-top:10px;}
+.button-group .btn{margin-right:10px;	}
+span.httpMethod{text-transform: uppercase;color: #fff;padding: 4px;border-radius: 4px;font-size: 11px;font-weight: bold;margin-right: 2px;}
+span.httpMethod.GET{background-color: #4DAB58;}
+span.httpMethod.POST{background-color: #CC9900;}
+span.httpMethod.PUT{background-color: #36F;}
+span.httpMethod.DELETE{background-color: #C30;}
+
+.call-actions {
+	background: -webkit-linear-gradient(top, rgba(222, 222, 222, 0.9) 0%, rgba(222, 222, 222, 1) 100%);
+	opacity: 1;
+	padding: 6px 0 5px 20px !important;
+	position: absolute;
+	right: 4%;
+	z-index: 200;
+}
+.call-actions img {opacity: 0.5;width: 18px;height: 18px;}
+.call-actions img:hover {opacity: 1;}

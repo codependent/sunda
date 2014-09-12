@@ -53,6 +53,8 @@ module.exports = function(rootRouter){
 					removed=true;
 				}
 			}
+			console.log("ELIMINADO")
+			res.send(200);
 		});
 	
 	return router;
