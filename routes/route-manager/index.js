@@ -1,12 +1,15 @@
 var express = require('express');
 var router = express.Router();
 
-module.exports = function(rootRouter){
+module.exports = function(rootRouter, db){
 	router.route('/')
 	
 		.get(function(req, res, next) {
-			//TODO hasta que los obtengamos de BBDD
-			res.json([]);
+			db.routes.find({}, function (err, docs) {
+				if(err) throw new Exception(err);
+				res.json(docs);
+			});
+
 			
 		}).post(function(req, res, next){
 			if(req.body.method == 'GET'){
@@ -30,10 +33,11 @@ module.exports = function(rootRouter){
 					res.send('DELETE called!!!');
 				});
 			}
-			//TODO hasta que generemos un id por BBDD
-			req.body.id = Math.random();
-			return res.json(req.body);
-			
+			db.routes.insert({path: req.body.path, method: req.body.method}, function (err, newDoc) {
+				if(err) throw new Exception(err);
+  				return res.json(newDoc);
+			});
+						
 		}).put(function(req, res, next){
 			console.log(req.body);
 			console.log(rootRouter);
@@ -53,8 +57,13 @@ module.exports = function(rootRouter){
 					removed=true;
 				}
 			}
-			console.log("ELIMINADO")
-			res.send(200);
+			console.log("about to remove route");
+			db.routes.remove({ _id: req.param('id') }, {}, function (err, numRemoved) {
+				if(err) throw new Exception(err);
+				console.log("number of removed: "+numRemoved);
+  				res.send(200);	
+			});
+			
 		});
 	
 	return router;

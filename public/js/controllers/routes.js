@@ -10,7 +10,7 @@ angular.module('sundaControllers', [])
 		});
 		
 		$scope.select = function(call){
-			$scope.callForm = {id: call.id, method : call.method, path : call.path};
+			$scope.callForm = {_id: call._id, method : call.method, path : call.path};
 		}
 		
 		$scope.save = function(){

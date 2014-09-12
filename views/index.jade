@@ -9,7 +9,7 @@ block content
 				div(id="routeList")
 					div(class="row routeRow", ng-repeat="call in calls", ng-mouseenter="showDeleteCall = true", ng-mouseleave="showDeleteCall = false") 
 						div(class="call-actions" ng-show="showDeleteCall")
-							a(class="call-delete", ng-click="remove(call.id)")
+							a(class="call-delete", ng-click="remove(call._id)")
 								img(src="img/ico/delete.png")
 						div(class="col-sm-12", ng-click="select(call)")
 							a(href="#") <span class="httpMethod {{call.method}}">{{call.method}}</span> {{call.path}}
@@ -55,6 +55,6 @@ block content
 										| Make admin
 				div(class="row")
 					div(class="col-sm-12 button-group")
-						button(class="btn btn-success", type="button", ng-show="callForm.id == null", ng-click="save()") Save
-						button(class="btn btn-success", type="button", ng-show="callForm.id != null", ng-click="update()") Update 
-						button(class="btn btn-warning", type="button", ng-show="callForm.id != null", ng-click="cancelEdit()") Cancel 			
+						button(class="btn btn-success", type="button", ng-show="callForm._id == null", ng-click="save()") Save
+						button(class="btn btn-success", type="button", ng-show="callForm._id != null", ng-click="update()") Update 
+						button(class="btn btn-warning", type="button", ng-show="callForm._id != null", ng-click="cancelEdit()") Cancel 			

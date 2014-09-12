@@ -8,7 +8,7 @@ var bodyParser = require('body-parser');
 var routes = require('../routes/index');
 var routeManager = require('../routes/route-manager');
 
-module.exports = function(app){
+module.exports = function(app, db){
 	app.use(favicon());
 	app.use(logger('dev'));
 	app.use(bodyParser.json());
@@ -17,5 +17,5 @@ module.exports = function(app){
 	app.use(express.static(path.join(__dirname+"/../", 'public')));
 
 	app.use('/', routes);
-	app.use('/user-routes', routeManager(routes));
+	app.use('/user-routes', routeManager(routes, db));
 }

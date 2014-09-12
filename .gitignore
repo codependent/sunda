@@ -1,2 +1,3 @@
 /node_modules/
 .project
+db/bin/routes
