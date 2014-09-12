@@ -15,7 +15,7 @@ block content
 							a(href="#") <span class="httpMethod {{call.method}}">{{call.method}}</span> {{call.path}}
 							
 		div(class="rightLayer col-sm-8") 
-			form(class="form-inline")
+			form(name="routeForm", class="form-inline")
 				div(class="row")
 					div(class="col-sm-12")
 						div(class="form-group")
@@ -24,7 +24,7 @@ block content
 									i( class="fa fa-link")
 								input(required="required",title="url path",class="form-control",type="text",placeholder="url path", ng-model="callForm.path", autofocus)
 						div(class="form-group")
-							select(ng-model="callForm.method" class="form-control")
+							select(required="required",ng-model="callForm.method" class="form-control")
 								option(value="GET") GET
 								option(value="POST") POST
 								option(value="PUT") PUT
@@ -55,6 +55,6 @@ block content
 										| Make admin
 				div(class="row")
 					div(class="col-sm-12 button-group")
-						button(class="btn btn-success", type="button", ng-show="callForm._id == null", ng-click="save()") Save
-						button(class="btn btn-success", type="button", ng-show="callForm._id != null", ng-click="update()") Update 
+						button(class="btn btn-success", type="button", ng-disabled="routeForm.$invalid", ng-show="callForm._id == null", ng-click="save()") Save
+						button(class="btn btn-success", type="button", ng-disabled="routeForm.$invalid", ng-show="callForm._id != null", ng-click="update()") Update 
 						button(class="btn btn-warning", type="button", ng-show="callForm._id != null", ng-click="cancelEdit()") Cancel 			
