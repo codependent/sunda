@@ -41,7 +41,11 @@ module.exports = function(rootRouter, db){
 		}).put(function(req, res, next){
 			console.log(req.body);
 			console.log(rootRouter);
-			
+			db.routes.update({_id: req.body._id}, { $set: { path: req.body.path, method: req.body.method } }, function (err, numReplaced) {
+				if(err) throw new Exception(err);
+				console.log("num updated "+ numReplaced);
+				return res.send(200);
+			});
 		});
 	
 	router.route('/:id')
@@ -65,6 +69,6 @@ module.exports = function(rootRouter, db){
 			});
 			
 		});
-	
+
 	return router;
 }

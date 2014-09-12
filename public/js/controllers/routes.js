@@ -6,7 +6,6 @@ angular.module('sundaControllers', [])
 		$scope.showDeleteCall = false;
 		Routes.get().success(function(data) {
 			$scope.calls = data;
-			$scope.loading = false;
 		});
 		
 		$scope.select = function(call){
@@ -23,11 +22,11 @@ angular.module('sundaControllers', [])
 		
 		$scope.update = function(){
 			Routes.update($scope.callForm)
-				.success(function(data) {
-					console.log($scope.calls);
-					//TODO
-			});
-			$scope.callForm = null;
+				.success(function() {
+					Routes.get().success(function(data) {
+						$scope.calls = data;
+					});
+			});			
 		}
 		
 		$scope.remove = function(id){
@@ -35,7 +34,6 @@ angular.module('sundaControllers', [])
 				.success(function() {
 					Routes.get().success(function(data) {
 						$scope.calls = data;
-						$scope.loading = false;
 					});
 			});
 			$scope.callForm = null;
