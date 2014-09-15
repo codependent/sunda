@@ -28,3 +28,5 @@ span.httpMethod.DELETE{background-color: #C30;}
 .call-actions img:hover {opacity: 1;}
 
 .deleteButton{cursor:pointer;}
+
+:not(form).ng-invalid:not(.ng-pristine){border: 1px solid red;}

@@ -1,5 +1,6 @@
 var express = require('express');
 var router = express.Router();
+var initialized = false;
 
 module.exports = function(rootRouter, db){
 
@@ -12,11 +13,30 @@ module.exports = function(rootRouter, db){
 		next();	
 	});
 
+	router.route('/init')
+		.get(function(req, res, nest){
+			if(!initialized){
+				console.log("/init!");
+				db.routes.find({}, function (err, docs) {
+					if(err) throw new Exception(err);
+					if(docs){
+						for(var i in docs){
+							req.body = docs[i];
+							createExpressRoute(req, res);
+						}
+					}
+				});
+				initialized = true;
+			}
+			res.status(200);
+			res.send();
+		});
+
 	router.route('/')
 		.get(function(req, res, next) {
 			db.routes.find({}, function (err, docs) {
 				if(err) throw new Exception(err);
-				res.json(docs);
+				res.json(docs);		
 			});
 			
 		}).post(function(req, res, next){
@@ -27,22 +47,26 @@ module.exports = function(rootRouter, db){
 			});
 						
 		}).put(function(req, res, next){
-			db.routes.update({_id: req.body._id}, req.body , function (err, numReplaced) {
-				if(err) throw new Exception(err);
-				console.log("num updated "+ numReplaced);
-				return res.send(200);
-			});
+			db.routes.findOne({_id : req.body._id}, function(err, doc){
+				console.log(doc);
+				if(err) throw new Exception(err);		
+				removeExpressRoute(doc.path);
+				createExpressRoute(req, res);
+				db.routes.update({_id: req.body._id}, req.body , function (err, numReplaced) {
+					if(err) throw new Exception(err);
+					console.log("num updated "+ numReplaced);
+					return res.send(200);
+				});
+			});		
 		});
 	
 
 	router.route('/:id')
 		.delete(function(req, res, next){
 			db.routes.findOne({_id : req.param('id')}, function(err, doc){
-				if(err) throw new Exception(err);	
-					console.log("FOUNDDDDD")
-					console.log(doc);			
-					removeExpressRoute(doc.path);
-					db.routes.remove({ _id: req.param('id') }, {}, function (err, numRemoved) {
+				if(err) throw new Exception(err);		
+				removeExpressRoute(doc.path);
+				db.routes.remove({ _id: req.param('id') }, {}, function (err, numRemoved) {
 					if(err) throw new Exception(err);
 					console.log("number of removed: "+numRemoved);
 	  				res.send(200);	
@@ -50,32 +74,29 @@ module.exports = function(rootRouter, db){
 			});			
 		});
 
-
 	function createExpressRoute(req, res){
-		console.log(rootRouter.stack);
 		if(req.body.method == 'GET'){
 			rootRouter.route(req.body.path)
 				.get(function(req, res) {
-					res.send('GET called!!!');
+					processCall(req, res);
 				});
 		}else if(req.body.method == 'POST'){
 			rootRouter.route(req.body.path)
-			.post(function(req, res) {
-				res.send('POST called!!!');
-			});
+				.post(function(req, res) {
+					processCall(req, res);
+				});
 		}else if(req.body.method == 'PUT'){
 			rootRouter.route(req.body.path)
-			.put(function(req, res) {
-				res.send('PUT called!!!');
-			});
+				.put(function(req, res) {
+					processCall(req, res);
+				});
 		}else if(req.body.method == 'DELETE'){
 			rootRouter.route(req.body.path)
-			.delete(function(req, res) {
-				res.send('DELETE called!!!');
-			});
+				.delete(function(req, res) {
+					processCall(req, res);
+				});
 		}
 	}
-
 
 	function removeExpressRoute(path){
 		var removed = false;
@@ -86,6 +107,30 @@ module.exports = function(rootRouter, db){
 				removed=true;
 			}
 		}
+	}
+
+	function processCall(req, res){
+		console.log("*****************************");
+		console.dir(rootRouter.stack);
+		console.log("*****************************");
+		db.routes.findOne({path : req.originalUrl}, function(err, doc){
+			console.log(doc);
+			if(err) throw new Exception(err);		
+			if(!doc){
+				res.send(404);
+			}else{
+				if(doc.response.type){
+					res.header("Content-Type", doc.response.type);
+				}
+				if(doc.response.data){
+					res.send(doc.response.code, doc.response.data);			
+				}else{
+					console.log("sending response status "+doc.response.code);
+					res.status(doc.response.code);			
+					res.send(doc.response.code);
+				}				
+			}
+		});	
 	}
 
 	return router;

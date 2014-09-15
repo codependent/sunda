@@ -2,35 +2,38 @@ angular.module('sundaControllers', [])
 	.controller('routesController', ['$scope','$http','Routes', function($scope, $http, Routes) {
 		$scope.editForm = true;
 		$scope.group = null;
-		$scope.callForm = null;
+		$scope.callForm = {params:[]};
 		$scope.showDeleteCall = false;
 		$scope.urlParamsClass = '';
 		$scope.headersClass = '';
-		$scope.urlParams = [{key : '', value : ''}];
 		$scope.headers = {}
 		Routes.get().success(function(data) {
 			$scope.calls = data;
 		});
 		
 		$scope.select = function(call){
-			$scope.callForm = {_id: call._id, method : call.method, path : call.path, response: {code : call.response.code, type : call.response.type, data : call.response.data} };
+			$scope.callForm = angular.copy(call);
 		}
 		
 		$scope.save = function(){
-			Routes.create($scope.callForm)
-				.success(function(data) {
-					$scope.calls.push(data);
-			});
-			$scope.callForm = null;
+			if(validateCallForm()){
+				Routes.create($scope.callForm)
+					.success(function(data) {
+						$scope.calls.push(data);
+					});
+				resetCallForm();
+			}
 		}
 		
 		$scope.update = function(){
-			Routes.update($scope.callForm)
-				.success(function() {
-					Routes.get().success(function(data) {
-						$scope.calls = data;
-					});
-			});			
+			if(validateCallForm()){
+				Routes.update($scope.callForm)
+					.success(function() {
+						Routes.get().success(function(data) {
+							$scope.calls = data;
+						});
+				});		
+			}
 		}
 		
 		$scope.remove = function(id){
@@ -40,29 +43,83 @@ angular.module('sundaControllers', [])
 						$scope.calls = data;
 					});
 			});
-			$scope.callForm = null;
+			resetCallForm();
 		}
 		
 		$scope.cancelEdit = function(){
-			$scope.callForm = null;
+			resetCallForm();
 		}
 
 		$scope.toggleURLParams = function(){
-			$scope.urlParamsClass = ($scope.urlParamsClass == '') ? 'active' : '';			
+			$scope.urlParamsClass = ($scope.urlParamsClass == '') ? 'active' : '';
+			if($scope.callForm.params.length == 0){
+				$scope.callForm.params.push({ key: '', value: '' });
+			}
 		}
 
 		$scope.addURLParam = function(last){
 			if(last){
-				$scope.urlParams.push({ key: '', value: '' });
+				$scope.callForm.params.push({ key: '', value: '' });
 			}
 		}
 
 		$scope.removeURLParam = function(index){
-			$scope.urlParams.splice(index,1);
+			$scope.callForm.params.splice(index,1);
 		}
 
 		$scope.changeResponseType = function(){
+			$scope.routeForm.responseData.$setValidity('parse', true);
+		}
 
+		$scope.changeResponseData = function(){
+			$scope.routeForm.responseData.$setValidity('parse', true);
+		}
+
+		function resetCallForm(){
+			$scope.callForm = {params:[]};
+			$scope.routeForm.$setPristine();
+			$scope.routeForm.responseData.$setValidity('parse', true);
+		}
+		
+		function validateCallForm(){
+			var valid = true;
+			if($scope.callForm.response.type != null && $scope.callForm.response.type != ''){
+				var data = $scope.callForm.response.data;
+				try{
+					if($scope.callForm.response.type == 'application/json'){
+						$.parseJSON(data)
+					}else if($scope.callForm.response.type == 'application/xml'){
+						valid = validateXML(data)
+					}
+				}catch(err){
+					valid = false;
+				}
+			}else{
+				$scope.callForm.response.data = '';
+			}
+			if(!valid){
+				$scope.routeForm.responseData.$setValidity('parse', false);
+			}
+			return valid;
+		}
+		
+		function validateXML(str){
+			try{
+				if(window.DOMParser){
+					parser=new DOMParser();
+					xmlDoc=parser.parseFromString(str,"text/xml");
+					return xmlDoc.documentElement.innerHTML.indexOf("error")==-1;
+				}else{
+					xmlDoc=new ActiveXObject("Microsoft.XMLDOM");
+					xmlDoc.async=false;
+					xmlDoc.loadXML(str);
+					return true;
+			  	}
+				return true
+			}catch(err){
+				console.log(err);
+				return false;
+			}
 		}
 
 	}]);

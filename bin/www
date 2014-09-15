@@ -1,10 +1,18 @@
 #!/usr/bin/env node
+var http = require('http');
 var debug = require('debug')('my-application');
 var app = require('../app');
+var request = require('request');
 
 app.set('port', process.env.PORT || 3000);
 app.set('env','development');
 
 var server = app.listen(app.get('port'), function() {
-  debug('Express server listening on port ' + server.address().port);
+	debug('Express server listening on port ' + server.address().port);
+	console.log("initializing");
+	request('http://localhost:'+app.get('port')+'/user-routes/init', function (error, response, body) {
+		if (!error && response.statusCode == 200) {
+			console.log(body);
+		}   
+	});
 });

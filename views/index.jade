@@ -21,7 +21,7 @@ block content
 							div(class="input-group")
 								span(class="input-group-addon")
 									i( class="fa fa-link")
-								input(ng-pattern="/^/?[a-zA-Z0-9]*$/", name="path", title="url path",class="form-control",type="text",placeholder="url path", ng-model="callForm.path", autofocus)
+								input(ng-pattern="/^/?[a-zA-Z0-9]+$/", name="path", title="url path",class="form-control",type="text",placeholder="url path", ng-model="callForm.path", autofocus)
 								
 						div(class="form-group col-sm-2")
 							select(required="required",ng-model="callForm.method", class="form-control")
@@ -36,10 +36,10 @@ block content
 							div(class="form-group col-sm-2")
 								button(class="btn btn-default", type="button", ng-click="toggleHeaders()", ng-class="headersClass") Headers
 
-					section(class="row", ng-show="urlParamsClass != ''", ng-repeat="urlParam in urlParams")					
+					section(class="row", ng-show="urlParamsClass != ''", ng-repeat="urlParam in callForm.params")					
 						div(class="form-group col-sm-3")							
 							input(title="URL Parameter Key",class="form-control",type="text",placeholder="URL Parameter Key", ng-model="urlParam.key", ng-click="addURLParam($last)")
-						div(class="form-group col-sm-3")						
+						div(class="form-group col-sm-3")
 							input(title="URL Parameter Value",class="form-control",type="text",placeholder="URL Parameter Value", ng-model="urlParam.value", ng-click="addURLParam($last)")
 						div(class="form-group col-sm-3", ng-show="!$last")
 							img(class="deleteButton", src="img/ico/delete.png", ng-click="removeURLParam($index)")
@@ -63,7 +63,7 @@ block content
 									option(value="application/xml") XML
 							div(class="form-group col-sm-7", ng-show = "callForm.response.type != null && callForm.response.type != '' ")
 								label Response data
-								textarea(class="form-control", ng-model="callForm.response.data")
+								textarea(name="responseData", class="form-control", rows="10", ng-model="callForm.response.data", ng-change="changeResponseData()")
 				
 			
 
