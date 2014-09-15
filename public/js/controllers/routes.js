@@ -4,12 +4,16 @@ angular.module('sundaControllers', [])
 		$scope.group = null;
 		$scope.callForm = null;
 		$scope.showDeleteCall = false;
+		$scope.urlParamsClass = '';
+		$scope.headersClass = '';
+		$scope.urlParams = [{key : '', value : ''}];
+		$scope.headers = {}
 		Routes.get().success(function(data) {
 			$scope.calls = data;
 		});
 		
 		$scope.select = function(call){
-			$scope.callForm = {_id: call._id, method : call.method, path : call.path};
+			$scope.callForm = {_id: call._id, method : call.method, path : call.path, response: {code : call.response.code, type : call.response.type, data : call.response.data} };
 		}
 		
 		$scope.save = function(){
@@ -42,4 +46,23 @@ angular.module('sundaControllers', [])
 		$scope.cancelEdit = function(){
 			$scope.callForm = null;
 		}
+
+		$scope.toggleURLParams = function(){
+			$scope.urlParamsClass = ($scope.urlParamsClass == '') ? 'active' : '';			
+		}
+
+		$scope.addURLParam = function(last){
+			if(last){
+				$scope.urlParams.push({ key: '', value: '' });
+			}
+		}
+
+		$scope.removeURLParam = function(index){
+			$scope.urlParams.splice(index,1);
+		}
+
+		$scope.changeResponseType = function(){
+
+		}
+
 	}]);

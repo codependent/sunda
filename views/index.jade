@@ -3,7 +3,7 @@ extends layout
 block content
 	div(id="todo-list", class="row")
 	
-		div(class="leftLayer col-sm-4")
+		section(class="leftLayer col-sm-4")
 			div
 				h1=title
 				div(id="routeList")
@@ -14,46 +14,57 @@ block content
 						div(class="col-sm-12", ng-click="select(call)")
 							a(href="#") <span class="httpMethod {{call.method}}">{{call.method}}</span> {{call.path}}
 							
-		div(class="rightLayer col-sm-8") 
-			form(name="routeForm", class="form-inline")
-				div(class="row")
-					div(class="col-sm-12")
-						div(class="form-group")
+		section(class="rightLayer col-sm-8") 
+			form(name="routeForm")
+				section(id="inputInfo")
+					section(class="row")
+						div(class="form-group col-sm-6")
 							div(class="input-group")
 								span(class="input-group-addon")
 									i( class="fa fa-link")
 								input(required="required",title="url path",class="form-control",type="text",placeholder="url path", ng-model="callForm.path", autofocus)
-						div(class="form-group")
-							select(required="required",ng-model="callForm.method" class="form-control")
+						div(class="form-group col-sm-2")
+							select(required="required",ng-model="callForm.method", class="form-control")
 								option(value="GET") GET
 								option(value="POST") POST
 								option(value="PUT") PUT
 								option(value="DELETE") DELETE
-						div(class="btn-group")
-							a(class="btn btn-primary" href="#")
-								i(class="fa fa-user fa-fw") 
-								| User
-							a(class="btn btn-primary dropdown-toggle" data-toggle="dropdown" href="#")
-								span(class="fa fa-caret-down")
-							ul(class="dropdown-menu")
-								li
-									a(href="#")
-										i(class="fa fa-pencil fa-fw") 
-										| Edit
-								li
-									a( href="#")
-										i(class="fa fa-trash-o fa-fw") 
-										| Delete
-								li
-									a(href="#")
-										i(class="fa fa-ban fa-fw") 
-										|Ban
-								li(class="divider")
-								li
-									a(href="#")
-										i(class="i") 
-										| Make admin
-				div(class="row")
+						div(class="form-group col-sm-2")
+							button(class="btn btn-default", type="button", ng-click="toggleURLParams()", ng-class="urlParamsClass") URL Params
+						//
+							div(class="form-group col-sm-2")
+								button(class="btn btn-default", type="button", ng-click="toggleHeaders()", ng-class="headersClass") Headers
+
+					section(class="row", ng-show="urlParamsClass != ''", ng-repeat="urlParam in urlParams")					
+						div(class="form-group col-sm-3")							
+							input(title="URL Parameter Key",class="form-control",type="text",placeholder="URL Parameter Key", ng-model="urlParam.key", ng-click="addURLParam($last)")
+						div(class="form-group col-sm-3")						
+							input(title="URL Parameter Value",class="form-control",type="text",placeholder="URL Parameter Value", ng-model="urlParam.value", ng-click="addURLParam($last)")
+						div(class="form-group col-sm-3", ng-show="!$last")
+							img(class="deleteButton", src="img/ico/delete.png", ng-click="removeURLParam($index)")
+				
+				section(id="outputInfo", class="row")
+					div(class="form-group col-sm-3")
+						label Response code
+						select(required="required", class="form-control", ng-model="callForm.response.code")
+							option(value="200") 200 - OK
+							option(value="404") 404 - Not Found
+							option(value="500") 500 - Internal Server Error
+					div(class="form-group col-sm-9")
+						div(class="row")
+							div(class="form-group col-sm-4")
+								label Response type
+								select(class="form-control", ng-model="callForm.response.type", ng-change="changeResponseType()")
+									option(value="") No data
+									option(value="application/json") JSON
+									option(value="application/xml") XML
+							div(class="form-group col-sm-7")
+								label Response data
+								textarea(class="form-control", ng-model="callForm.response.data")
+				
+			
+
+				section(class="row")
 					div(class="col-sm-12 button-group")
 						button(class="btn btn-success", type="button", ng-disabled="routeForm.$invalid", ng-show="callForm._id == null", ng-click="save()") Save
 						button(class="btn btn-success", type="button", ng-disabled="routeForm.$invalid", ng-show="callForm._id != null", ng-click="update()") Update 

@@ -1,9 +1,13 @@
 .leftLayer{background-color: #EEE;}
 .leftLayer > div{margin-left:15px;}
+.rightLayer{margin-top:20px;}
 #routeList > div.routeRow > div {padding: 8px 10px;}
 #routeList > div.routeRow:hover {background-color: #DDD;cursor:pointer;text-decoration:none;border-radius: 0px 10px 10px 0px;}
 #routeList > div.routeRow > div:hover > a {text-decoration:none;}
 #routeList a {color: #444!important;}
+
+#inputInfo, #outputInfo{border-bottom:1px solid #ccc;margin-bottom:15px;}
+
 .button-group{margin-top:10px;}
 .button-group .btn{margin-right:10px;	}
 span.httpMethod{text-transform: uppercase;color: #fff;padding: 4px;border-radius: 4px;font-size: 11px;font-weight: bold;margin-right: 2px;}
@@ -22,3 +26,5 @@ span.httpMethod.DELETE{background-color: #C30;}
 }
 .call-actions img {opacity: 0.5;width: 18px;height: 18px;}
 .call-actions img:hover {opacity: 1;}
+
+.deleteButton{cursor:pointer;}
