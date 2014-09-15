@@ -2,7 +2,6 @@ extends layout
 
 block content
 	div(id="todo-list", class="row")
-	
 		section(class="leftLayer col-sm-4")
 			div
 				h1=title
@@ -22,9 +21,11 @@ block content
 							div(class="input-group")
 								span(class="input-group-addon")
 									i( class="fa fa-link")
-								input(required="required",title="url path",class="form-control",type="text",placeholder="url path", ng-model="callForm.path", autofocus)
+								input(ng-pattern="/^/?[a-zA-Z0-9]*$/", name="path", title="url path",class="form-control",type="text",placeholder="url path", ng-model="callForm.path", autofocus)
+								
 						div(class="form-group col-sm-2")
 							select(required="required",ng-model="callForm.method", class="form-control")
+								option(value="") [Method]
 								option(value="GET") GET
 								option(value="POST") POST
 								option(value="PUT") PUT
@@ -47,7 +48,9 @@ block content
 					div(class="form-group col-sm-3")
 						label Response code
 						select(required="required", class="form-control", ng-model="callForm.response.code")
+							option(value="") [Response code]
 							option(value="200") 200 - OK
+							option(value="201") 201 - Created
 							option(value="404") 404 - Not Found
 							option(value="500") 500 - Internal Server Error
 					div(class="form-group col-sm-9")
@@ -58,7 +61,7 @@ block content
 									option(value="") No data
 									option(value="application/json") JSON
 									option(value="application/xml") XML
-							div(class="form-group col-sm-7")
+							div(class="form-group col-sm-7", ng-show = "callForm.response.type != null && callForm.response.type != '' ")
 								label Response data
 								textarea(class="form-control", ng-model="callForm.response.data")
 				
