@@ -4,7 +4,6 @@ angular.module('sundaControllers', [])
 		$scope.group = null;
 		$scope.callForm = {params:[]};
 		$scope.showDeleteCall = false;
-		$scope.urlParamsClass = '';
 		$scope.headersClass = '';
 		$scope.headers = {}
 		Routes.get().success(function(data) {
@@ -12,6 +11,7 @@ angular.module('sundaControllers', [])
 		});
 		
 		$scope.select = function(call){
+			console.log(call);
 			$scope.callForm = angular.copy(call);
 		}
 		
@@ -51,9 +51,10 @@ angular.module('sundaControllers', [])
 		}
 
 		$scope.toggleURLParams = function(){
-			$scope.urlParamsClass = ($scope.urlParamsClass == '') ? 'active' : '';
 			if($scope.callForm.params.length == 0){
 				$scope.callForm.params.push({ key: '', value: '' });
+			}else{
+				$scope.callForm.params = [];
 			}
 		}
 
@@ -100,6 +101,15 @@ angular.module('sundaControllers', [])
 			if(!valid){
 				$scope.routeForm.responseData.$setValidity('parse', false);
 			}
+
+			var filteredParams = [];
+			for(var i = 0; i< $scope.callForm.params.length;i++){
+				if($scope.callForm.params[i].key!=''){
+					filteredParams.push($scope.callForm.params[i]);
+				}
+			}
+			$scope.callForm.params=filteredParams;
+
 			return valid;
 		}
 		

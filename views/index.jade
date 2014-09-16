@@ -31,7 +31,7 @@ block content
 								option(value="PUT") PUT
 								option(value="DELETE") DELETE
 						div(class="form-group col-sm-2")
-							button(class="btn btn-default", type="button", ng-click="toggleURLParams()", ng-class="urlParamsClass") URL Params
+							button(class="btn btn-default", type="button", ng-click="toggleURLParams()", ng-class="{active: callForm.params.length>0}") URL Params
 						//
 							div(class="form-group col-sm-2")
 								button(class="btn btn-default", type="button", ng-click="toggleHeaders()", ng-class="headersClass") Headers

@@ -110,35 +110,57 @@ module.exports = function(rootRouter, db){
 	}
 
 	function processCall(req, res){
+		var originalUrl = req.originalUrl;
 		console.log("*****************************");
-		console.dir(req.originalUrl);
+		console.dir(originalUrl);
 		console.log("*****************************");
 		console.log(rootRouter.stack);
 		console.log("*****************************")
 
+		if(originalUrl.indexOf("?")!=-1){
+			originalUrl = originalUrl.substring(0,originalUrl.indexOf("?"));
+		}
 		var matchedUrl = null;
 		for(var i=0; i<rootRouter.stack.length && matchedUrl == null; i++){
-			console.log(rootRouter.stack[i].regexp);
-			if(rootRouter.stack[i].regexp.test(req.originalUrl)){
+			if(rootRouter.stack[i].regexp.test(originalUrl)){
 				matchedUrl = rootRouter.stack[i].route.path;
 			}
 		}
-
+		console.log(matchedUrl);
 		db.routes.findOne({path : matchedUrl}, function(err, doc){
 			if(err) throw new Exception(err);		
 			if(!doc){
 				res.send(404);
 			}else{
-				if(doc.response.type){
-					res.header("Content-Type", doc.response.type);
+				var paramsOk = true;
+				if(doc.params.length>0){
+					for (var i = 0; paramsOk && i < doc.params.length; i++) {
+						console.log("doc param "+doc.params[i].key);
+						console.log("req query "+req.query[doc.params[i].key]);
+						if(req.query[doc.params[i].key] == undefined){
+							paramsOk = false;
+						}else{
+							if(doc.params[i].value!='' && req.query[doc.params[i].key] != doc.params[i].value){
+								paramsOk = false;
+							}
+						}
+					};
 				}
-				if(doc.response.data){
-					res.send(doc.response.code, doc.response.data);			
+				if(paramsOk){
+					if(doc.response.type){
+						res.header("Content-Type", doc.response.type);
+					}
+					if(doc.response.data){
+						res.send(doc.response.code, doc.response.data);			
+					}else{
+						console.log("sending response status "+doc.response.code);
+						res.status(doc.response.code);			
+						res.send(doc.response.code);
+					}	
 				}else{
-					console.log("sending response status "+doc.response.code);
-					res.status(doc.response.code);			
-					res.send(doc.response.code);
-				}				
+					res.status(401);
+					res.send(401);
+				}			
 			}
 		});	
 	}
