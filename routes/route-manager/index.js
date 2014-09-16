@@ -5,70 +5,68 @@ var initialized = false;
 module.exports = function(rootRouter, db){
 
 	router.use(function(req, res, next) {
-		if(req.body.path){
-			if(req.body.path.indexOf("/")!=0){
-				req.body.path = "/"+req.body.path;
-			}
+		if(req.body.path && req.body.path.indexOf("/")!=0){
+			req.body.path = "/"+req.body.path;
 		}
 		next();	
 	});
 
 	router.route('/init')
-		.get(function(req, res, nest){
-			if(!initialized){
-				db.Routes.find({})
-				.then(function(docs) {
-					if(docs){
-						for(var i in docs){
-							req.body = docs[i];
-							createExpressRoute(req, res);
-						}
+	.get(function(req, res, next){
+		if(!initialized){
+			db.Routes.find({})
+			.then(function(docs) {
+				if(docs){
+					for(var i in docs){
+						req.body = docs[i];
+						createExpressRoute(req, res);
 					}
-					initialized = true;
-				})
-				.fail(function(err){
-					throw new Exception(err);
-				});
-			}
-			res.status(200);
-			res.send();
-		});
+				}
+				initialized = true;
+			})
+			.fail(function(err){
+				throw new Exception(err);
+			});
+		}
+		res.status(200);
+		res.send();
+	});
 
 	router.route('/')
-		.get(function(req, res, next) {
-			db.Routes.find({})
-			.then(function (docs) {
-				res.json(docs);		
-			})
-			.fail(function(err){
-				throw new Exception(err);
-			});
-			
-		}).post(function(req, res, next){
-			createExpressRoute(req, res);
-			db.Routes.insert(req.body)
-			.then(function(newDoc) {
-  				return res.json(newDoc);
-			})
-			.fail(function(err){
-				throw new Exception(err);
-			});
-						
-		}).put(function(req, res, next){
-			db.Routes.findOne({_id : req.body._id})
-			.then(function (doc){
-				removeExpressRoute(doc.path);
-				createExpressRoute(req, res);
-				return db.Routes.update({_id: req.body._id}, req.body)
-			})
-			.then(function (numReplaced) {
-				console.log("num updated "+ numReplaced);
-				return res.send(200);
-			})
-			.fail(function(err){
-				throw new Exception(err);
-			});
+	.get(function(req, res, next) {
+		db.Routes.find({})
+		.then(function (docs) {
+			res.json(docs);		
+		})
+		.fail(function(err){
+			throw new Exception(err);
 		});
+		
+	}).post(function(req, res, next){
+		createExpressRoute(req, res);
+		db.Routes.insert(req.body)
+		.then(function(newDoc) {
+			return res.json(newDoc);
+		})
+		.fail(function(err){
+			throw new Exception(err);
+		});
+					
+	}).put(function(req, res, next){
+		db.Routes.findOne({_id : req.body._id})
+		.then(function (doc){
+			removeExpressRoute(doc.path);
+			createExpressRoute(req, res);
+			return db.Routes.update({_id: req.body._id}, req.body)
+		})
+		.then(function (numReplaced) {
+			console.log("num updated "+ numReplaced);
+			return res.send(200);
+		})
+		.fail(function(err){
+			throw new Exception(err);
+		});
+	});
 	
 
 	router.route('/:id')
