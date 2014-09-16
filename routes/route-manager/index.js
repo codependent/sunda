@@ -111,10 +111,20 @@ module.exports = function(rootRouter, db){
 
 	function processCall(req, res){
 		console.log("*****************************");
-		console.dir(rootRouter.stack);
+		console.dir(req.originalUrl);
 		console.log("*****************************");
-		db.routes.findOne({path : req.originalUrl}, function(err, doc){
-			console.log(doc);
+		console.log(rootRouter.stack);
+		console.log("*****************************")
+
+		var matchedUrl = null;
+		for(var i=0; i<rootRouter.stack.length && matchedUrl == null; i++){
+			console.log(rootRouter.stack[i].regexp);
+			if(rootRouter.stack[i].regexp.test(req.originalUrl)){
+				matchedUrl = rootRouter.stack[i].route.path;
+			}
+		}
+
+		db.routes.findOne({path : matchedUrl}, function(err, doc){
 			if(err) throw new Exception(err);		
 			if(!doc){
 				res.send(404);
