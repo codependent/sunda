@@ -1,11 +1,11 @@
-var Datastore = require('nedb');
-var db = {};
-db.routes = new Datastore({ filename: './db/bin/routes', autoload: true });
-
 var express = require('express');
 var path = require('path');
 var middlewares = require('./middlewares');
 var errorHandling = require('./middlewares/error-handling');
+
+var Routes = require('./models/routes');
+var db = {};
+db.Routes = Routes;
 
 var app = express();
 // view engine setup

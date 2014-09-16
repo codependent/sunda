@@ -16,17 +16,19 @@ module.exports = function(rootRouter, db){
 	router.route('/init')
 		.get(function(req, res, nest){
 			if(!initialized){
-				console.log("/init!");
-				db.routes.find({}, function (err, docs) {
-					if(err) throw new Exception(err);
+				db.Routes.find({})
+				.then(function(docs) {
 					if(docs){
 						for(var i in docs){
 							req.body = docs[i];
 							createExpressRoute(req, res);
 						}
 					}
+					initialized = true;
+				})
+				.fail(function(err){
+					throw new Exception(err);
 				});
-				initialized = true;
 			}
 			res.status(200);
 			res.send();
@@ -34,45 +36,56 @@ module.exports = function(rootRouter, db){
 
 	router.route('/')
 		.get(function(req, res, next) {
-			db.routes.find({}, function (err, docs) {
-				if(err) throw new Exception(err);
+			db.Routes.find({})
+			.then(function (docs) {
 				res.json(docs);		
+			})
+			.fail(function(err){
+				throw new Exception(err);
 			});
 			
 		}).post(function(req, res, next){
 			createExpressRoute(req, res);
-			db.routes.insert(req.body, function (err, newDoc) {
-				if(err) throw new Exception(err);
+			db.Routes.insert(req.body)
+			.then(function(newDoc) {
   				return res.json(newDoc);
+			})
+			.fail(function(err){
+				throw new Exception(err);
 			});
 						
 		}).put(function(req, res, next){
-			db.routes.findOne({_id : req.body._id}, function(err, doc){
-				console.log(doc);
-				if(err) throw new Exception(err);		
+			db.Routes.findOne({_id : req.body._id})
+			.then(function (doc){
 				removeExpressRoute(doc.path);
 				createExpressRoute(req, res);
-				db.routes.update({_id: req.body._id}, req.body , function (err, numReplaced) {
-					if(err) throw new Exception(err);
-					console.log("num updated "+ numReplaced);
-					return res.send(200);
-				});
-			});		
+				return db.Routes.update({_id: req.body._id}, req.body)
+			})
+			.then(function (numReplaced) {
+				console.log("num updated "+ numReplaced);
+				return res.send(200);
+			})
+			.fail(function(err){
+				throw new Exception(err);
+			});
 		});
 	
 
 	router.route('/:id')
 		.delete(function(req, res, next){
-			db.routes.findOne({_id : req.param('id')}, function(err, doc){
-				if(err) throw new Exception(err);		
+			db.Routes.findOne({_id : req.param('id')})
+			.then(function(doc){
 				removeExpressRoute(doc.path);
-				db.routes.remove({ _id: req.param('id') }, {}, function (err, numRemoved) {
-					if(err) throw new Exception(err);
-					console.log("number of removed: "+numRemoved);
-	  				res.send(200);	
-				});
-			});			
+				return db.Routes.remove({ _id: req.param('id') }, {})
+			}).then(function(numRemoved) {
+				console.log("number of removed: "+numRemoved);
+  				res.send(200);
+			})
+			.fail(function(err){
+				throw new Exception(err);
+			});
 		});
+	  				
 
 	function createExpressRoute(req, res){
 		if(req.body.method == 'GET'){
@@ -127,8 +140,9 @@ module.exports = function(rootRouter, db){
 			}
 		}
 		console.log(matchedUrl);
-		db.routes.findOne({path : matchedUrl}, function(err, doc){
-			if(err) throw new Exception(err);		
+		
+		db.Routes.findOne({path : matchedUrl})
+		.then(function(doc){
 			if(!doc){
 				res.send(404);
 			}else{
@@ -162,7 +176,10 @@ module.exports = function(rootRouter, db){
 					res.send(401);
 				}			
 			}
-		});	
+		})
+		.fail(function(err){
+			throw new Exception(err)
+		})
 	}
 
 	return router;
