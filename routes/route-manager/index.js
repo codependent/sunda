@@ -19,13 +19,13 @@ module.exports = function(rootRouter, db){
 				if(docs){
 					for(var i in docs){
 						req.body = docs[i];
-						createExpressRoute(req, res);
+						createExpressRoute(req, res, next);
 					}
 				}
 				initialized = true;
 			})
 			.fail(function(err){
-				throw new Exception(err);
+				next(err);
 			});
 		}
 		res.status(200);
@@ -39,24 +39,24 @@ module.exports = function(rootRouter, db){
 			res.json(docs);		
 		})
 		.fail(function(err){
-			throw new Exception(err);
+			next(err);
 		});
 		
 	}).post(function(req, res, next){
-		createExpressRoute(req, res);
+		createExpressRoute(req, res, next);
 		db.Routes.insert(req.body)
 		.then(function(newDoc) {
 			return res.json(newDoc);
 		})
 		.fail(function(err){
-			throw new Exception(err);
+			next(err);
 		});
 					
 	}).put(function(req, res, next){
 		db.Routes.findOne({_id : req.body._id})
 		.then(function (doc){
 			removeExpressRoute(doc.path);
-			createExpressRoute(req, res);
+			createExpressRoute(req, res, next);
 			return db.Routes.update({_id: req.body._id}, req.body)
 		})
 		.then(function (numReplaced) {
@@ -64,7 +64,7 @@ module.exports = function(rootRouter, db){
 			return res.send(200);
 		})
 		.fail(function(err){
-			throw new Exception(err);
+			next(err);
 		});
 	});
 	
@@ -80,31 +80,31 @@ module.exports = function(rootRouter, db){
   				res.send(200);
 			})
 			.fail(function(err){
-				throw new Exception(err);
+				next(err);
 			});
 		});
 	  				
 
-	function createExpressRoute(req, res){
+	function createExpressRoute(req, res, next){
 		if(req.body.method == 'GET'){
 			rootRouter.route(req.body.path)
 				.get(function(req, res) {
-					processCall(req, res);
+					processCall(req, res, next);
 				});
 		}else if(req.body.method == 'POST'){
 			rootRouter.route(req.body.path)
 				.post(function(req, res) {
-					processCall(req, res);
+					processCall(req, res, next);
 				});
 		}else if(req.body.method == 'PUT'){
 			rootRouter.route(req.body.path)
 				.put(function(req, res) {
-					processCall(req, res);
+					processCall(req, res, next);
 				});
 		}else if(req.body.method == 'DELETE'){
 			rootRouter.route(req.body.path)
 				.delete(function(req, res) {
-					processCall(req, res);
+					processCall(req, res, next);
 				});
 		}
 	}
@@ -120,7 +120,7 @@ module.exports = function(rootRouter, db){
 		}
 	}
 
-	function processCall(req, res){
+	function processCall(req, res, next){
 		var originalUrl = req.originalUrl;
 		console.log("*****************************");
 		console.dir(originalUrl);
@@ -176,8 +176,8 @@ module.exports = function(rootRouter, db){
 			}
 		})
 		.fail(function(err){
-			throw new Exception(err)
-		})
+			next(err);
+		});
 	}
 
 	return router;
