@@ -45,6 +45,23 @@ angular.module('sundaControllers', [])
 			});
 			resetCallForm();
 		}
+
+		$scope.invoke = function(){
+			var time0 = new Date().getTime();
+			$http({method: $scope.callForm.method, url: "http://localhost:3000"+$scope.callForm.path})
+			.success(function(data, status, headers, config){
+				var time1 = new Date().getTime();
+				$scope.invocationResult = {};
+				$scope.invocationResult.data = data;
+				$scope.invocationResult.status = status;
+				$scope.invocationResult.headers = headers;
+				$scope.invocationResult.time = time1-time0;
+				$scope.invocationResult.format = 'pretty';
+			})
+			.error(function(data, status, headers, config) {
+				console.log("error")
+			});
+		}
 		
 		$scope.cancelEdit = function(){
 			resetCallForm();
@@ -80,6 +97,7 @@ angular.module('sundaControllers', [])
 			$scope.callForm = {params:[]};
 			$scope.routeForm.$setPristine();
 			$scope.routeForm.responseData.$setValidity('parse', true);
+			$scope.invocationResult = null;
 		}
 		
 		function validateCallForm(){

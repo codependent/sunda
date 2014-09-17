@@ -63,12 +63,34 @@ block content
 									option(value="application/xml") XML
 							div(class="form-group col-sm-7", ng-show = "callForm.response.type != null && callForm.response.type != '' ")
 								label Response data
-								textarea(name="responseData", class="form-control", rows="10", ng-model="callForm.response.data", ng-change="changeResponseData()")
+								textarea(name="responseData", class="form-control", rows="7", ng-model="callForm.response.data", ng-change="changeResponseData()")
 				
 			
 
-				section(class="row")
+				section(id="app-buttons", class="row")
 					div(class="col-sm-12 button-group")
 						button(class="btn btn-success", type="button", ng-disabled="routeForm.$invalid", ng-show="callForm._id == null", ng-click="save()") Save
 						button(class="btn btn-success", type="button", ng-disabled="routeForm.$invalid", ng-show="callForm._id != null", ng-click="update()") Update 
+						button(class="btn btn-primary", type="button", ng-disabled="routeForm.$invalid", ng-show="callForm._id != null", ng-click="invoke()") Invoke
 						button(class="btn btn-warning", type="button", ng-show="callForm._id != null", ng-click="cancelEdit()") Cancel 			
+
+				section(id="invocation-result", class="row", ng-show="invocationResult") 
+					div(class="col-sm-12")
+						div(class="row")
+							div(class="col-sm-12") 
+								span(class="invocation-meta") STATUS
+								span(class="invocation-meta-value") {{invocationResult.status}}
+								span(class="invocation-meta") TIME
+								span(class="invocation-meta-value") {{invocationResult.time}} ms						
+						div(class="row")
+							div(class="col-sm-12")
+								div(class="btn-group")
+									button(type="button", class="btn btn-default", ng-click="invocationResult.format='pretty'", ng-class="{active : invocationResult.format=='pretty'}") Pretty
+									button(type="button", class="btn btn-default", ng-click="invocationResult.format='raw'", ng-class="{active : invocationResult.format=='raw'}") Raw
+						div(class="row")
+							div(class="col-sm-11")
+								div(ng-show="invocationResult.format == 'pretty'"){{invocationResult.data}}
+								div(ng-show="invocationResult.format == 'raw'")
+									textarea(class="form-control") {{invocationResult.data}} 
+
+
