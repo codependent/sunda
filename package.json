@@ -16,5 +16,15 @@
     "q": "^1.0.1",
     "request": "^2.42.0",
     "static-favicon": "~1.0.0"
-  }
+  },  
+  "devDependencies":{
+  	"mocha": "~1.21.4",
+  	"should": "~4.0.0",
+  	"supertest": "~0.13.0"
+  },
+  "scripts": {
+    "test": "make test",
+    "start": "node bin/www"
+  },
+  "main": "app.js"
 }
