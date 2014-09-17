@@ -23,8 +23,8 @@
   	"supertest": "~0.13.0"
   },
   "scripts": {
-    "test": "make test",
-    "start": "node bin/www"
+    "test":  "set NODE_ENV='development' & mocha --check-leaks",
+    "start": "set NODE_ENV='production' & node bin/www"
   },
   "main": "app.js"
 }

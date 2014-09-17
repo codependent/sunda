@@ -1,8 +1,9 @@
 var express = require('express');
+var Routes = require('../../models/routes');
 var router = express.Router();
 var initialized = false;
 
-module.exports = function(rootRouter, db){
+module.exports = function(rootRouter){
 
 	router.use(function(req, res, next) {
 		if(req.body.path && req.body.path.indexOf("/")!=0){
@@ -14,7 +15,7 @@ module.exports = function(rootRouter, db){
 	router.route('/init')
 	.get(function(req, res, next){
 		if(!initialized){
-			db.Routes.find({})
+			Routes.find({})
 			.then(function(docs) {
 				if(docs){
 					for(var i in docs){
@@ -34,7 +35,7 @@ module.exports = function(rootRouter, db){
 
 	router.route('/')
 	.get(function(req, res, next) {
-		db.Routes.find({})
+		Routes.find({})
 		.then(function (docs) {
 			res.json(docs);		
 		})
@@ -44,8 +45,9 @@ module.exports = function(rootRouter, db){
 		
 	}).post(function(req, res, next){
 		createExpressRoute(req, res, next);
-		db.Routes.insert(req.body)
+		Routes.insert(req.body)
 		.then(function(newDoc) {
+			res.status(201);
 			return res.json(newDoc);
 		})
 		.fail(function(err){
@@ -53,15 +55,14 @@ module.exports = function(rootRouter, db){
 		});
 					
 	}).put(function(req, res, next){
-		db.Routes.findOne({_id : req.body._id})
+		Routes.findOne({_id : req.body._id})
 		.then(function (doc){
 			removeExpressRoute(doc.path);
 			createExpressRoute(req, res, next);
-			return db.Routes.update({_id: req.body._id}, req.body)
+			return Routes.update({_id: req.body._id}, req.body)
 		})
 		.then(function (numReplaced) {
-			console.log("num updated "+ numReplaced);
-			return res.send(200);
+			res.send();
 		})
 		.fail(function(err){
 			next(err);
@@ -71,12 +72,11 @@ module.exports = function(rootRouter, db){
 
 	router.route('/:id')
 		.delete(function(req, res, next){
-			db.Routes.findOne({_id : req.param('id')})
+			Routes.findOne({_id : req.param('id')})
 			.then(function(doc){
 				removeExpressRoute(doc.path);
-				return db.Routes.remove({ _id: req.param('id') }, {})
+				return Routes.remove({ _id: req.param('id') }, {})
 			}).then(function(numRemoved) {
-				console.log("number of removed: "+numRemoved);
   				res.send(200);
 			})
 			.fail(function(err){
@@ -114,7 +114,6 @@ module.exports = function(rootRouter, db){
 		for(var i=0; !removed && i< rootRouter.stack.length; i++){
 			if(rootRouter.stack[i].regexp.test(path)){
 				rootRouter.stack.splice(i, 1);
-				console.log(rootRouter.stack);
 				removed=true;
 			}
 		}
@@ -122,12 +121,6 @@ module.exports = function(rootRouter, db){
 
 	function processCall(req, res, next){
 		var originalUrl = req.originalUrl;
-		console.log("*****************************");
-		console.dir(originalUrl);
-		console.log("*****************************");
-		console.log(rootRouter.stack);
-		console.log("*****************************")
-
 		if(originalUrl.indexOf("?")!=-1){
 			originalUrl = originalUrl.substring(0,originalUrl.indexOf("?"));
 		}
@@ -137,9 +130,7 @@ module.exports = function(rootRouter, db){
 				matchedUrl = rootRouter.stack[i].route.path;
 			}
 		}
-		console.log(matchedUrl);
-		
-		db.Routes.findOne({path : matchedUrl})
+		Routes.findOne({path : matchedUrl, method : req.method})
 		.then(function(doc){
 			if(!doc){
 				res.send(404);
@@ -147,8 +138,6 @@ module.exports = function(rootRouter, db){
 				var paramsOk = true;
 				if(doc.params.length>0){
 					for (var i = 0; paramsOk && i < doc.params.length; i++) {
-						console.log("doc param "+doc.params[i].key);
-						console.log("req query "+req.query[doc.params[i].key]);
 						if(req.query[doc.params[i].key] == undefined){
 							paramsOk = false;
 						}else{
@@ -165,13 +154,12 @@ module.exports = function(rootRouter, db){
 					if(doc.response.data){
 						res.send(doc.response.code, doc.response.data);			
 					}else{
-						console.log("sending response status "+doc.response.code);
 						res.status(doc.response.code);			
 						res.send(doc.response.code);
 					}	
 				}else{
-					res.status(401);
-					res.send(401);
+					res.status(404);
+					res.send();
 				}			
 			}
 		})
