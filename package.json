@@ -2,6 +2,7 @@
   "name": "application-name",
   "version": "1.0.0",
   "private": true,
+  "author": "codependent <joseantonio.inigo@gmail.com>",
   "scripts": {
     "start": "node ./bin/www"
   },
