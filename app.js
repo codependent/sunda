@@ -3,15 +3,11 @@ var path = require('path');
 var middlewares = require('./middlewares');
 var errorHandling = require('./middlewares/error-handling');
 
-var Routes = require('./models/routes');
-var db = {};
-db.Routes = Routes;
-
 var app = express();
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
-middlewares(app, db);
+middlewares(app);
 errorHandling(app);
 
 module.exports = app;

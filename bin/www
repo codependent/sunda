@@ -1,11 +1,12 @@
 #!/usr/bin/env node
+process.env.NODE_ENV = process.env.NODE_ENV || 'production';
 var http = require('http');
 var debug = require('debug')('my-application');
 var app = require('../app');
 var request = require('request');
 
 app.set('port', process.env.PORT || 3000);
-app.set('env','development');
+app.set('env', process.env.NODE_ENV);
 
 var server = app.listen(app.get('port'), function() {
 	debug('Express server listening on port ' + server.address().port);
@@ -15,3 +16,5 @@ var server = app.listen(app.get('port'), function() {
 		}   
 	});
 });
+
+module.exports = app;

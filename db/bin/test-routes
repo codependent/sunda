@@ -1,0 +1,7 @@
+{"method":"POST","params":[],"path":"/coches/marcas","response":{"code":"201","type":"application/json","data":"{\"_id\":\"asdfasdf\", \"marca\":\"Ferrari\"}"},"_id":"HtByB7cFFNhq3TLV"}
+{"method":"GET","params":[{"key":"key1","value":"value1"}],"path":"/coches/marcas","response":{"code":"200","type":"application/json","data":"[{\"marca\":\"Chrysler\"},{\"marca\":\"Volvo\"}]"},"_id":"IWedkmWtblgPbVFz"}
+{"$$deleted":true,"_id":"HtByB7cFFNhq3TLV"}
+{"$$deleted":true,"_id":"IWedkmWtblgPbVFz"}
+{"method":"GET","params":[],"path":"/coches/marcas","response":{"code":"200","type":"application/json","data":"[{\"marca\":\"Ford\"},{\"marca\":\"Renault\"}]"},"_id":"wFueKhqaoftTDK5u"}
+{"method":"GET","params":[{"key":"key1","value":"value1"}],"path":"/coches/marcas","response":{"code":"200","type":"application/json","data":"[{\"marca\":\"Chrysler\"},{\"marca\":\"Volvo\"}]"},"_id":"wFueKhqaoftTDK5u"}
+{"method":"POST","params":[],"path":"/coches/marcas","response":{"code":"201","type":"application/json","data":"{\"_id\":\"asdfasdf\", \"marca\":\"Ferrari\"}"},"_id":"jRcWWhGr7I1BR863"}
