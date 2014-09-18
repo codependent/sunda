@@ -11,7 +11,7 @@ angular.module('sundaControllers', [])
 		});
 		
 		$scope.select = function(call){
-			console.log(call);
+			resetCallForm();
 			$scope.callForm = angular.copy(call);
 		}
 		
@@ -48,7 +48,18 @@ angular.module('sundaControllers', [])
 
 		$scope.invoke = function(){
 			var time0 = new Date().getTime();
-			$http({method: $scope.callForm.method, url: "http://localhost:3000"+$scope.callForm.path})
+			var params = '';
+			if($scope.callForm.params){
+				params+='?';
+				for (var i = 0; i < $scope.callForm.params.length; i++) {
+					params+=$scope.callForm.params[i].key;
+					params+='='+$scope.callForm.params[i].value;
+					if(i != $scope.callForm.params.length -1){
+						params+='&';
+					}
+				};
+			}
+			$http({method: $scope.callForm.method, url: "http://localhost:3000"+$scope.callForm.path+params})
 			.success(function(data, status, headers, config){
 				var time1 = new Date().getTime();
 				$scope.invocationResult = {};
