@@ -3,20 +3,16 @@ winston.loggers.add('request', {
 	console: {
         silent: true
     },
-    file: {
-        filename: __dirname+'/output/http.log',
-        json: false
-    }
+    /*file: { filename: __dirname+'/output/http.log', json: false }*/
+    transports: [ new (winston.transports.DailyRotateFile)({ filename: __dirname+'/output/http.log', datePattern: '.yyyy-MM-dd', json : false }) ]
 });
 
 winston.loggers.add('request_json', {
 	console: {
         silent: true
     },
-    file: {
-        filename: __dirname+'/output/http_json.log',
-        json: false
-    }
+    /*file: {filename: __dirname+'/output/http_json.log', json: false }*/
+    transports: [ new (winston.transports.DailyRotateFile)({ filename: __dirname+'/output/http_json.log', datePattern: '.yyyy-MM-dd', json : true }) ]
 });
 
 var winlog1 = winston.loggers.get('request');
