@@ -1,6 +1,8 @@
 var express = require('express');
 var Routes = require('../../models/routes');
 var router = express.Router();
+var logger = require('../../log/application')
+
 var initialized = false;
 
 module.exports = function(rootRouter){
@@ -14,6 +16,7 @@ module.exports = function(rootRouter){
 
 	router.route('/init')
 	.get(function(req, res, next){
+		logger.info("Inicializando rutas - Ya inicializado? "+initialized);
 		if(!initialized){
 			Routes.find({})
 			.then(function(docs) {
