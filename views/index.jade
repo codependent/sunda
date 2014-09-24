@@ -89,7 +89,7 @@ block content
 									button(type="button", class="btn btn-default", ng-click="invocationResult.format='raw'", ng-class="{active : invocationResult.format=='raw'}") Raw
 						div(class="row")
 							div(class="col-sm-11")
-								div(ng-show="invocationResult.format == 'pretty'"){{invocationResult.data}}
+								div(ng-show="invocationResult.format == 'pretty'") {{invocationResult.data}}
 								div(ng-show="invocationResult.format == 'raw'")
 									textarea(class="form-control") {{invocationResult.data}} 
 
