@@ -1,7 +1,7 @@
 var express = require('express');
 var Routes = require('../../models/routes');
 var router = express.Router();
-var logger = require('../../log/application')
+var logger = require('../../log').appLog
 
 var initialized = false;
 
