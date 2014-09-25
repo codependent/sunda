@@ -1,6 +1,8 @@
 var express = require('express');
 var Routes = require('../../models/routes');
 var router = express.Router();
+var logger = require('../../log/application')
+
 var initialized = false;
 
 module.exports = function(rootRouter){
@@ -14,6 +16,7 @@ module.exports = function(rootRouter){
 
 	router.route('/init')
 	.get(function(req, res, next){
+		logger.info("Inicializando rutas - Ya inicializado? "+initialized);
 		if(!initialized){
 			Routes.find({})
 			.then(function(docs) {
@@ -29,8 +32,7 @@ module.exports = function(rootRouter){
 				next(err);
 			});
 		}
-		res.status(200);
-		res.send();
+		res.status(200).send();
 	});
 
 	router.route('/')
@@ -152,14 +154,12 @@ module.exports = function(rootRouter){
 						res.header("Content-Type", doc.response.type);
 					}
 					if(doc.response.data){
-						res.send(doc.response.code, doc.response.data);			
+						res.status(doc.response.code).send(doc.response.data);			
 					}else{
-						res.status(doc.response.code);			
-						res.send(doc.response.code);
+						res.status(doc.response.code).send();
 					}	
 				}else{
-					res.status(404);
-					res.send();
+					res.status(404).send();
 				}			
 			}
 		})
