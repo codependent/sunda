@@ -5,15 +5,14 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
+var requestLog = require('../log/request')
 var routes = require('../routes/index');
 var routeManager = require('../routes/route-manager');
 
-module.exports = function(app, db){
+module.exports = function(app){
 	app.use(favicon());
-	if(process.env.NODE_ENV == 'production'){
-		var requestLog = require('../log/request')
-		app.use(logger(requestLog.format, {stream: requestLog.stream}))
-	}else{
+	app.use(logger(requestLog.format, {stream: requestLog.stream}))
+	if(process.env.NODE_ENV == 'development'){
 		app.use(logger('dev'))
 	}
 	app.use(bodyParser.json());
@@ -22,5 +21,5 @@ module.exports = function(app, db){
 	app.use(express.static(path.join(__dirname+"/../", 'public')));
 
 	app.use('/', routes);
-	app.use('/user-routes', routeManager(routes, db));
+	app.use('/user-routes', routeManager(routes));
 }

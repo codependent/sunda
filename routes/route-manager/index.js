@@ -32,8 +32,7 @@ module.exports = function(rootRouter){
 				next(err);
 			});
 		}
-		res.status(200);
-		res.send();
+		res.status(200).send();
 	});
 
 	router.route('/')
@@ -155,14 +154,12 @@ module.exports = function(rootRouter){
 						res.header("Content-Type", doc.response.type);
 					}
 					if(doc.response.data){
-						res.send(doc.response.code, doc.response.data);			
+						res.status(doc.response.code).send(doc.response.data);			
 					}else{
-						res.status(doc.response.code);			
-						res.send(doc.response.code);
+						res.status(doc.response.code).send();
 					}	
 				}else{
-					res.status(404);
-					res.send();
+					res.status(404).send();
 				}			
 			}
 		})

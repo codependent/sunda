@@ -1,18 +1,16 @@
 var winston = require('winston');
+var nconf = require('nconf');
+
 winston.loggers.add('request', {
-	console: {
-        silent: true
-    },
+	console: {silent: true},
     /*file: { filename: __dirname+'/output/http.log', json: false }*/
-    transports: [ new (winston.transports.DailyRotateFile)({ filename: __dirname+'/output/http.log', datePattern: '.yyyy-MM-dd', json : false }) ]
+    transports: [ new (winston.transports.DailyRotateFile)({ filename: nconf.get('log').http.file, datePattern: '.yyyy-MM-dd', json : false }) ]
 });
 
 winston.loggers.add('request_json', {
-	console: {
-        silent: true
-    },
+	console: {silent: true},
     /*file: {filename: __dirname+'/output/http_json.log', json: false }*/
-    transports: [ new (winston.transports.DailyRotateFile)({ filename: __dirname+'/output/http_json.log', datePattern: '.yyyy-MM-dd', json : true }) ]
+    transports: [ new (winston.transports.DailyRotateFile)({ filename: nconf.get('log').http.jsonFile, datePattern: '.yyyy-MM-dd', json : true }) ]
 });
 
 var winlog1 = winston.loggers.get('request');
@@ -27,4 +25,4 @@ var winstonStream = {
 };
 
 module.exports.stream = winstonStream;
-module.exports.format = ':remote-addr - :remote-user [:date] ":method :url HTTP/:http-version" :status :res[content-length] - :response-time ms';
+module.exports.format = nconf.get('log').http.format;
