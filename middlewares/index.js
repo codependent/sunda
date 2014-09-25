@@ -12,7 +12,7 @@ var routeManager = require('../routes/route-manager');
 module.exports = function(app){
 	app.use(favicon());
 	app.use(logger(requestLog.format, {stream: requestLog.stream}))
-	if(process.env.NODE_ENV == 'development'){
+	if(app.get('nconf').get('NODE_ENV') == 'development'){
 		app.use(logger('dev'))
 	}
 	app.use(bodyParser.json());
