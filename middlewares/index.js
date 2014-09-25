@@ -5,6 +5,7 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
+var nconf = require('../config');
 var requestLog = require('../log/request')
 var routes = require('../routes/index');
 var routeManager = require('../routes/route-manager');
@@ -12,7 +13,7 @@ var routeManager = require('../routes/route-manager');
 module.exports = function(app){
 	app.use(favicon());
 	app.use(logger(requestLog.format, {stream: requestLog.stream}))
-	if(app.get('nconf').get('NODE_ENV') == 'development'){
+	if(nconf.get('NODE_ENV') == 'development'){
 		app.use(logger('dev'))
 	}
 	app.use(bodyParser.json());
