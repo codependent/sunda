@@ -6,7 +6,7 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
 var nconf = require('../config');
-var requestLog = require('../log/request')
+var requestLog = require('../log').request;
 var routes = require('../routes/index');
 var routeManager = require('../routes/route-manager');
 
