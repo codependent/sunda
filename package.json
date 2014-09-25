@@ -4,7 +4,7 @@
   "private": true,
   "author": "codependent <joseantonio.inigo@gmail.com>",
   "scripts": {
-    "test": "set NODE_ENV=development&mocha --check-leaks",
+    "test": "set NODE_ENV=test&mocha --check-leaks",
     "start": "set NODE_ENV=production&node bin/www"
   },
   "dependencies": {
