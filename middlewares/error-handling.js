@@ -1,5 +1,7 @@
+var nconf = require('../config')
+
 module.exports = function(app){
-	
+
 	/// catch 404 and forwarding to error handler
 	app.use(function(req, res, next) {
 	    var err = new Error('Not Found');
@@ -11,7 +13,7 @@ module.exports = function(app){
 
 	// development error handler
 	// will print stacktrace
-	if (app.get('env') === 'development') {
+	if (nconf.get('NODE_ENV') === 'development') {
 	    app.use(function(err, req, res, next) {
 	    	console.log(err);
 	        res.status(err.status || 500);

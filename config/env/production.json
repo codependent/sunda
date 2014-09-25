@@ -1,0 +1,15 @@
+{
+	"database" : {
+					"file":"./db/storage/routes"
+				 },
+	"log" : {
+				"http" : {
+							"format":":remote-addr - :remote-user [:date] \":method :url HTTP/:http-version\" :status - :res[content-length] B - :response-time ms",
+							"file":"./log/output/pro/http.log",
+							"jsonFile":"./log/output/pro/http_json.log"
+						 },
+				"application" : {
+									"file":"./log/output/pro/out.log"
+								}
+			}
+}
