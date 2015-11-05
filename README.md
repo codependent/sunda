@@ -12,8 +12,10 @@ REST Service Mock application powered by
 
 It is intented to be used as a mock for REST services. You just configure the operations and resources needed, and the different responses expected. Your client app attacks this service instead using http://localhost:3000 + the desired configured path and voila!
 
-Paths support Express url sintax:
-* Path variables: /users/:userId -> Would answer to urls such as `http://localhost:3000/users/1` `http://localhost:3000/users/4`
-* URL Variables: they have to be defined using the URL Params button.
+## Path definitions
+
+Paths support Express' URL sintax:
+* **Path variables**: /users/:userId -> Would answer to urls such as `http://localhost:3000/users/1` `http://localhost:3000/users/4`
+* **URL Variables**: they have to be defined using the URL Params button.
 
 To use it just execute `npm install` followed by `npm start`.
