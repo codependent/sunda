@@ -1,5 +1,10 @@
 var winston = require('winston');
 var nconf = require('nconf');
+var mkdirp = require('mkdirp');
+    
+mkdirp.sync(nconf.get('log').application.file.substring(0, nconf.get('log').application.file.lastIndexOf("/")));
+mkdirp.sync(nconf.get('log').http.file.substring(0, nconf.get('log').http.file.lastIndexOf("/")));
+mkdirp.sync(nconf.get('log').http.jsonFile.substring(0, nconf.get('log').http.jsonFile.lastIndexOf("/")));
 
 winston.loggers.add('application', {
 	console: {silent: (process.env.NODE_ENV == 'production')},
