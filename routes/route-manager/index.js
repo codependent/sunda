@@ -74,12 +74,12 @@ module.exports = function(rootRouter){
 
 	router.route('/:id')
 		.delete(function(req, res, next){
-			Routes.findOne({_id : req.param('id')})
+			Routes.findOne({_id : req.params.id})
 			.then(function(doc){
 				removeExpressRoute(doc.path);
-				return Routes.remove({ _id: req.param('id') }, {})
+				return Routes.remove({ _id: req.params.id }, {})
 			}).then(function(numRemoved) {
-  				res.send(200);
+  				res.sendStatus(200);
 			})
 			.fail(function(err){
 				next(err);
