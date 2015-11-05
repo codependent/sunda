@@ -18,4 +18,5 @@ Paths support Express' URL sintax:
 * **Path variables**: /users/:userId -> Would answer to urls such as `http://localhost:3000/users/1` `http://localhost:3000/users/4`
 * **URL Variables**: they have to be defined using the URL Params button.
 
+## Launch Sunda!
 To use it just execute `npm install` followed by `npm start`.
