@@ -10,7 +10,7 @@ REST Service Mock application powered by
 * winston
 * ..and many others.
 
-It is intented to be used as a mock for REST services. You just configure the operations and resources needed, and the different responses expected. Your client app attacks this service instead using http://localhost:3000 + the desired configured path and voila!
+It is intented to be used as a mock for REST services. You just configure the operations and resources needed, and the different responses expected. Your client app attacks this service instead ot the original, using http://localhost:3000 + the desired configured path and voila!
 
 ## Path definitions
 
